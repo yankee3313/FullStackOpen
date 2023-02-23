@@ -1,2 +1,1 @@
 # FullStackOpen
-Exercises for FullStackOpen
