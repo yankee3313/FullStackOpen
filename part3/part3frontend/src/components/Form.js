@@ -7,20 +7,32 @@ const Form = (p) => {
         name: p.newName,
         number: p.newNumber,
       }
-      const existingName = p.persons.find(x=> x.name === nameObject.name);
+      const existingName = p.persons.find(x=> 
+        x.name.toLowerCase() === nameObject.name.toLowerCase());
       if(existingName){
         if(window.confirm(`${p.newName} is already added to the phonebook,
         replace the old number with a new one?`)){
           personService
-          .update(p.persons.indexOf(existingName)+1,nameObject)
+          .update(existingName.id,nameObject)
+          .then(() => {
+            p.setSuccessMessage(`${p.newName} was updated in the phonebook`)
+            setTimeout(() => {
+              p.setSuccessMessage(null)
+            }, 5000)
+            p.setNewName('')
+            p.setNewNumber('')
+          })
+          .catch(error => {
+            console.log(error.response.data.error)
+            p.setErrorMessage(error.response.data.error)
+            setTimeout(() => {
+              p.setErrorMessage(null)
+            }, 5000)
+          })
           personService
           .getAll()
           .then(updatedPersons => {
           p.setPersons(updatedPersons)
-          p.setSuccessMessage(`${p.newName} was updated in the phonebook`)
-          setTimeout(() => {
-            p.setSuccessMessage(null)
-          }, 3000)
           })
         }
       } 
@@ -32,10 +44,18 @@ const Form = (p) => {
         p.setSuccessMessage(`${p.newName} was added to the phonebook`)
         setTimeout(() => {
           p.setSuccessMessage(null)
-        }, 3000)
-      })}
-      p.setNewName('')
-      p.setNewNumber('')
+        }, 5000)
+        p.setNewName('')
+        p.setNewNumber('')
+      }).catch(error => {
+          console.log(error.response.data.error)
+          p.setErrorMessage(error.response.data.error)
+          setTimeout(() => {
+            p.setErrorMessage(null)
+          }, 5000)
+        })
+      }
+    
     }
   return (
   <form onSubmit={addName}>
@@ -45,7 +65,8 @@ const Form = (p) => {
           </div>
           <div>
             number: <input value={p.newNumber}
-            onChange={p.handleNumberChange}/>
+            onChange={p.handleNumberChange}
+            placeholder="000-000-0000"/>
           </div>
           <div>
             <button type="submit">add</button>

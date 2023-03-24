@@ -49,7 +49,8 @@ const App = () => {
               setPersons={setPersons}
               handleNameChange={handleNameChange}
               handleNumberChange={handleNumberChange}
-              setSuccessMessage={setSuccessMessage}/>
+              setSuccessMessage={setSuccessMessage}
+              setErrorMessage={setErrorMessage}/>
       <h3>Numbers</h3>
           {persons.map(x => <Note key={x.id} 
                                   name={x.name} 

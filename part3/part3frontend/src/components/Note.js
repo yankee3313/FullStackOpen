@@ -20,7 +20,7 @@ const Note = (p) => {
       }, 3000)
   } 
   const name = p.name;
-  if (name.replaceAll(/\s/g, '').toLowerCase().includes(p.searchItem))
+  if (name.replaceAll(/\s/gi, '').toLowerCase().includes(p.searchItem.toLowerCase()))
     return (
       <div>
         <li>{p.name} {p.number}
