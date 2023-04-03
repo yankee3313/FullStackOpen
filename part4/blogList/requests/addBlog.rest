@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "King of Tooting",
+    "author": "Jimbo",
+    "url": "www.farts.com",
+    "likes": 5
+}
