@@ -1,18 +1,18 @@
-const mongoose = require('mongoose')
 const supertest = require('supertest')
-const app = require('../app')
-const helper = require('./test_helper')
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const api = supertest(app)
-const Blog = require('../models/blog')
-const User = require('../models/user')
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
-})
+const helper = require('./test_helper')
+const app = require('../app')
+const api = supertest(app)
+const User = require('../models/user')
+const Blog = require('../models/blog')
 
 describe('when there are initially some blogs saved', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
+  })
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -26,7 +26,7 @@ describe('when there are initially some blogs saved', () => {
       console.log(response.body[i].id)
       expect(response.body[i].id).toBeDefined()
     }
-  })})
+  })}, 10000)
 
 describe('addition of a new blog', () => {
   test('verifies POST method creates new post', async () => {
@@ -88,6 +88,10 @@ describe('addition of a new blog', () => {
 })
 
 describe('deletion of a blog', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
+  })
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
@@ -173,7 +177,7 @@ describe('when there is initially one user in db', () => {
   
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
-  }, 100000)
+  }, 10000)
 })
 
 afterAll(async () => {
