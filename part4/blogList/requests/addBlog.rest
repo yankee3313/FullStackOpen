@@ -5,5 +5,9 @@ Content-Type: application/json
     "title": "King of Tooting",
     "author": "Jimbo",
     "url": "www.farts.com",
-    "likes": 5
+    "likes": 5,
+    "user": {
+    "username": "root",
+    "name": "Superuser"
+  }
 }
