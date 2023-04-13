@@ -77,7 +77,7 @@ const blogFormRef = useRef()
 
 const blogForm = () => (
   <Togglable buttonLabel='new blog' ref={blogFormRef}>
-    <BlogForm createBlog={addBlog} />
+    <BlogForm createBlog={addBlog} user={user}/>
   </Togglable>
 )
 
@@ -115,7 +115,7 @@ return (
   <h2>blogs</h2>
   <ul>
   {blogs.map(blog =>
-    <Blog key={blog.id} blog={blog}/>
+    <Blog key={blog.id} blog={blog} user={user}/>
   )}
   </ul>
   </div>
