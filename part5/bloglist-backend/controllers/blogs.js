@@ -23,6 +23,10 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
     return response.status(401).json({ error: 'operation not permitted' })
   }
 
+  if (!title || !author) {
+    return response.status(400).json({ error: 'title and author required' })
+  }
+
   blog.user = user._id
 
   const createdBlog = await blog.save()
