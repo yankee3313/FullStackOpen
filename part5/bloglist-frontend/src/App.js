@@ -21,7 +21,7 @@ useEffect(() => {
     blogService
       .getAll()
       .then(initialBlogs => {
-        setBlogs(initialBlogs)
+        setBlogs(initialBlogs.sort((a, b) => b.likes - a.likes))
       })
   }, [])
 
