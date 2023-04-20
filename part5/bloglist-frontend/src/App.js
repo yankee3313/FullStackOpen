@@ -58,13 +58,14 @@ const handleLogin = async (event) => {
 const addBlog = (blogObject) => {
   blogFormRef.current.toggleVisibility()
   blogService
-    .create(blogObject)
+    .create(blogObject, user.token)
       .then(returnedBlog => {
       setBlogs(blogs.concat(returnedBlog))
       setSuccessMessage(`${blogObject.title} by ${blogObject.author} added`)
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
+      setUser(user)
     }).catch(error => {
       setErrorMessage('Title and Author required')
       setTimeout(() => {
@@ -77,7 +78,8 @@ const blogFormRef = useRef()
 
 const blogForm = () => (
   <Togglable buttonLabel='new blog' ref={blogFormRef}>
-    <BlogForm createBlog={addBlog} user={user}/>
+    <BlogForm createBlog={addBlog} user={user} 
+      setBlogs={setBlogs} blogs={blogs} setUser={setUser}/>
   </Togglable>
 )
 
@@ -114,8 +116,9 @@ return (
   {user && <div>
   <h2>blogs</h2>
   <ul>
-  {blogs.map(blog =>
-    <Blog key={blog.id} blog={blog} user={user}/>
+  {blogs.map(blog => 
+    <Blog key={blog.id} blog={blog} user={user}
+      blogs={blogs} setBlogs={setBlogs} setUser={setUser}/>
   )}
   </ul>
   </div>

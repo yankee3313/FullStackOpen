@@ -18,7 +18,9 @@ const create = async newObject => {
   }
 
   const response = await axios.post(baseUrl, newObject, config)
-  return response.data
+  const blogWithUser = { ...response.data, user: JSON.parse(window.localStorage.getItem('loggedBlogappUser')) }
+  console.log(blogWithUser)
+  return blogWithUser
 }
 
 const update = (id, newObject) => {
@@ -26,5 +28,19 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
+const deleteBlog = (id, token) => {
+  console.log('deleteBlog token:', token)
+  const config = {
+    headers: { Authorization: `bearer ${token}` }
+  }
+  const request = axios.delete(`${baseUrl}/${id}`, config)
+  return request.then(response => response.data)
+}
+
+const getOne = async id => {
+  const response = await axios.get(`${baseUrl}/${id}`)
+  return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, update, setToken }
+export default { getAll, create, update, setToken, deleteBlog, getOne }
