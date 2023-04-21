@@ -41,21 +41,19 @@ const Blog = ({ blog, user, blogs, setBlogs, setSuccessMessage, addLikes }) => {
   console.log(user)
 
   return (
-    <div style={blogStyle}>
-      <div className='blog'>
-        {blog.title} {blog.author}
-        <button style={hideWhenVisible} onClick={() => setVisible(true)}>view</button>
-        <button style={showWhenVisible} onClick={() => setVisible(false)}>hide</button>
-        <div style={showWhenVisible}>
-          <div>{blog.url}</div>
-          <div>likes: {likes}
-            <button onClick={handleLikeClick}>like</button>
-          </div>
-          <div >user: {blog.user.name}</div>
-          {user && blog.user.username === user.username && (
-            <button onClick={() => remove(blog.id)}>delete</button>
-          )}
+    <div style={blogStyle} className='blog'>
+      {blog.title} {blog.author}
+      <button style={hideWhenVisible} onClick={() => setVisible(true)}>view</button>
+      <button style={showWhenVisible} onClick={() => setVisible(false)}>hide</button>
+      <div style={showWhenVisible}>
+        <div>{blog.url}</div>
+        <div>likes: {likes}
+          <button onClick={handleLikeClick}>like</button>
         </div>
+        <div >user: {blog.user.name}</div>
+        {user && blog.user.username === user.username && (
+          <button onClick={() => remove(blog.id)}>delete</button>
+        )}
       </div>
     </div>
   )
