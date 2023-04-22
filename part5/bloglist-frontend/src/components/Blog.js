@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, blogs, setBlogs, setSuccessMessage, addLikes }) => {
+const Blog = ({ blog, user, addLikes, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
 
@@ -16,29 +15,17 @@ const Blog = ({ blog, user, blogs, setBlogs, setSuccessMessage, addLikes }) => {
     marginBottom: 5
   }
 
-  const handleLikeClick = async () => {
+  const handleLikeClick = () => {
     const updatedBlog = { ...blog, likes: likes + 1 }
-    const response = await blogService.update(updatedBlog.id, updatedBlog)
-    setLikes(response.likes)
     addLikes(updatedBlog)
+    setLikes(updatedBlog.likes)
   }
 
   const remove = async (id) => {
     if (window.confirm(`Do you really want to delete ${blog.title} by ${blog.author}?`)) {
-      try {
-        await blogService.deleteBlog(id, user.token)
-        setBlogs(blogs.filter(blog => blog.id !== id))
-        setSuccessMessage(`${blog.title} by ${blog.author} removed`)
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      } catch (error) {
-        console.log(error)
-      }
+      deleteBlog(id, blog)
     }
   }
-  console.log(blog)
-  console.log(user)
 
   return (
     <div style={blogStyle} className='blog'>

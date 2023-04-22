@@ -18,14 +18,14 @@ describe('Blog', () => {
     }
 
     const user = {
-      name: 'Superuser',
-      username: 'root',
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ…g3Mn0.TIqpPqI8ihU-PETVw20FtQ6VccoXyBQJILFwN8Z3Lso',
+      name: 'abcdef',
+      username: 'gefae',
+      token: '12345',
     }
 
-    const mockHandler = jest.fn()
+    const addLikesMock = jest.fn()
 
-    render(<Blog blog={blog} user={user} addLikes={mockHandler} />)
+    render(<Blog blog={blog} user={user} addLikes={addLikesMock}/>)
 
     const u = userEvent.setup()
     const viewButton = screen.getByText('view')
@@ -34,6 +34,6 @@ describe('Blog', () => {
     await u.click(likeButton)
     await u.click(likeButton)
 
-    expect(mockHandler.mock.calls).toHaveLength(2)
+    expect(addLikesMock.mock.calls).toHaveLength(2)
   })
 })

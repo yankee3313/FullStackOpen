@@ -34,6 +34,27 @@ const App = () => {
     }
   }, [])
 
+  const addLikes = async (updatedBlog) => {
+    try {
+      await blogService.update(updatedBlog.id, updatedBlog)
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  const deleteBlog = async (id, blog) => {
+    try {
+      await blogService.deleteBlog(id, user.token)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+      setSuccessMessage(`${blog.title} by ${blog.author} removed`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -54,7 +75,7 @@ const App = () => {
       }, 5000)
     }
   }
-  //
+
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
@@ -117,8 +138,7 @@ const App = () => {
         <ul>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} user={user}
-              blogs={blogs} setBlogs={setBlogs} setUser={setUser}
-              setSuccessMessage={setSuccessMessage}/>
+              addLikes={addLikes} deleteBlog={deleteBlog}/>
           )}
         </ul>
       </div>
