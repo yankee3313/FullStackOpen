@@ -36,10 +36,7 @@ describe('Blog app', function() {
 
   describe('when logged in', function() {
     beforeEach(function() {
-      cy.contains('log in').click()
-      cy.get('input:first').type('rcomer')
-      cy.get('input:last').type('password')
-      cy.get('#login-button').click()
+      cy.login({ username: 'rcomer', password: 'password' })
     })
 
     it('a new blog can be created', function() {
@@ -96,14 +93,13 @@ describe('Blog app', function() {
       cy.get('#url').type('www.cypressurl.com')
       cy.contains('save').click()
       cy.contains('logout').click()
-      cy.contains('log in').click()
-      cy.get('input:first').type('root')
-      cy.get('input:last').type('password2')
-      cy.get('#login-button').click()
+
+      cy.login({ username: 'root', password: 'password2' })
+
       cy.contains('view').click()
       cy.contains('delete').should('not.exist')
     })
-    it.only('blogs are ordered according to likes', function() {
+    it('blogs are ordered according to likes', function() {
       cy.contains('new blog').click()
       cy.get('#title').type('a blog created by cypress')
       cy.get('#author').type('Cypress Author')
