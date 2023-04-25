@@ -54,11 +54,11 @@ describe('Blog app', function() {
     })
 
     it('a user can like a blog', function() {
-      cy.contains('new blog').click()
-      cy.get('#title').type('a blog created by cypress')
-      cy.get('#author').type('Cypress Author')
-      cy.get('#url').type('www.cypressurl.com')
-      cy.contains('save').click()
+      cy.createBlog({
+        title: 'a blog created by cypress',
+        author: 'Cypress Author',
+        url: 'www.cypressurl.com'
+      })
       cy.contains('view').click()
       cy.contains('like').click()
       cy.get('#likes')
@@ -66,11 +66,11 @@ describe('Blog app', function() {
     })
 
     it('a user can delete a blog they created', function() {
-      cy.contains('new blog').click()
-      cy.get('#title').type('a blog created by cypress')
-      cy.get('#author').type('Cypress Author')
-      cy.get('#url').type('www.cypressurl.com')
-      cy.contains('save').click()
+      cy.createBlog({
+        title: 'a blog created by cypress',
+        author: 'Cypress Author',
+        url: 'www.cypressurl.com'
+      })
       cy.contains('view').click()
       cy.window().then((win) => {
         cy.stub(win, 'confirm').returns(true)
@@ -87,11 +87,11 @@ describe('Blog app', function() {
         password: 'password2'
       }
       cy.request('POST', 'http://localhost:3003/api/users/', newUser)
-      cy.contains('new blog').click()
-      cy.get('#title').type('a blog created by cypress')
-      cy.get('#author').type('Cypress Author')
-      cy.get('#url').type('www.cypressurl.com')
-      cy.contains('save').click()
+      cy.createBlog({
+        title: 'a blog created by cypress',
+        author: 'Cypress Author',
+        url: 'www.cypressurl.com'
+      })
       cy.contains('logout').click()
 
       cy.login({ username: 'root', password: 'password2' })
@@ -100,19 +100,19 @@ describe('Blog app', function() {
       cy.contains('delete').should('not.exist')
     })
     it('blogs are ordered according to likes', function() {
-      cy.contains('new blog').click()
-      cy.get('#title').type('a blog created by cypress')
-      cy.get('#author').type('Cypress Author')
-      cy.get('#url').type('www.cypressurl.com')
-      cy.contains('save').click()
+      cy.createBlog({
+        title: 'a blog created by cypress',
+        author: 'Cypress Author',
+        url: 'www.cypressurl.com'
+      })
       cy.contains('view').click()
       cy.get('.blog').eq(0).parent().find('.likeButton', { timeout: 10000 }).should('be.visible').click()
 
-      cy.contains('new blog').click()
-      cy.get('#title').type('second blog')
-      cy.get('#author').type('Second Author')
-      cy.get('#url').type('www.secondBlog.com')
-      cy.contains('save').click()
+      cy.createBlog({
+        title: 'second blog',
+        author: 'Second Author',
+        url: 'www.secondBlog.com'
+      })
       cy.get('.viewBtn').last().should('be.visible').click()
       cy.get('.likeButton').last().should('be.visible').click()
       cy.get('.likeButton').last().should('be.visible').click()
