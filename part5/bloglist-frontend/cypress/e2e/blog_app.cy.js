@@ -1,12 +1,12 @@
 describe('Blog app', function() {
   beforeEach(function() {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     const user = {
       name: 'Ross Comer',
       username: 'rcomer',
       password: 'password'
     }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
     cy.visit('http://localhost:3000')
   })
   it('front page can be opened', function() {
@@ -86,7 +86,7 @@ describe('Blog app', function() {
         username: 'root',
         password: 'password2'
       }
-      cy.request('POST', 'http://localhost:3003/api/users/', newUser)
+      cy.request('POST', `${Cypress.env('BACKEND')}/users`, newUser)
       cy.createBlog({
         title: 'a blog created by cypress',
         author: 'Cypress Author',
