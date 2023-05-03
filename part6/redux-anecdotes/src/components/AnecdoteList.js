@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { vote } from '../reducers/anecdoteReducer'
-import { notifChange, resetNotif } from '../reducers/notifReducer'
+import { notifChange } from '../reducers/notifReducer'
 import React from 'react'
 
 const AnecdoteList = () => {
