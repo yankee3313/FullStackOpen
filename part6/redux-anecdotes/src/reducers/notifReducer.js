@@ -4,11 +4,20 @@ const notifSlice = createSlice({
     name: 'notification',
     initialState: null,
     reducers: {
-      notifChange: (state, action) => action.payload,
-      resetNotif: () => null,
+      setNotif: (state, action) => action.payload,
+      resetNotif: (state, action) => ''
     },
   
   })
 
+  export const notifChange = (message, duration) => {
+    return dispatch => {
+      dispatch(setNotif(message))
+      setTimeout(() => {
+        dispatch(resetNotif())
+      }, duration * 1000)
+    }
+  }
+
 export default notifSlice.reducer
-export const { notifChange, resetNotif } = notifSlice.actions
+export const { setNotif, resetNotif } = notifSlice.actions
