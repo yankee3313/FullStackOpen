@@ -8,7 +8,7 @@ const notifReducer = (state, action) => {
   switch (action.type) {
     case 'VOTE':
       return `You voted for '${action.content}'`
-    case 'ERROR': 
+    case 'LENGTHERROR': 
       return 'too short anecdote, must have length 5 or more'
     case 'CLEAR':
       return null
@@ -61,7 +61,8 @@ const App = () => {
       <h3>Anecdote app</h3>
     
       <Notification notifState={notifState}/>
-      <AnecdoteForm newAnecdoteMutation={newAnecdoteMutation}/>
+      <AnecdoteForm newAnecdoteMutation={newAnecdoteMutation}
+        notifDispatch={notifDispatch} />
     
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
