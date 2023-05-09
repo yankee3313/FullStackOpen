@@ -64,6 +64,7 @@ const CreateNew = (props) => {
   const content = useField('content')
   const author = useField('author')
   const info = useField('info')
+  const reset = useField('reset')
 
 
   const handleSubmit = (e) => {
@@ -75,6 +76,13 @@ const CreateNew = (props) => {
       votes: 0
     })
     navigate('/')
+  }
+
+  const handleReset = (event) => {
+    event.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -94,6 +102,7 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
@@ -123,7 +132,6 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
-    console.log(anecdote)
     setNotification(`a new anecdote ${anecdote.content} created!`)
     setTimeout(() => {
       setNotification(null)
