@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, like, canRemove, remove }) => {
+  console.log('Blog user:', blog.user, canRemove)
   const [visible, setVisible] = useState(false)
 
   const style = {

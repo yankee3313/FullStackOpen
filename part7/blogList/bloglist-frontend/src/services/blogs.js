@@ -8,6 +8,10 @@ const headers = {
     : null,
 }
 
+const setToken = (token) => {
+  headers.Authorization = token ? `Bearer ${token}` : null
+}
+
 const getAll = async () => {
   const request = await axios.get(baseUrl)
   return request.data
@@ -29,4 +33,4 @@ const remove = async (id) => {
   await axios.delete(`${baseUrl}/${id}`, { headers })
 }
 
-export default { getAll, create, update, remove }
+export default { getAll, create, update, remove, setToken }
