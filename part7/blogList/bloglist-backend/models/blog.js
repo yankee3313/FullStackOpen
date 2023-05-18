@@ -11,6 +11,10 @@ const schema = mongoose.Schema({
   },
   url: String,
   likes: Number,
+  comments: [
+    {
+      type: String,
+    }],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
