@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { Table } from 'react-bootstrap'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import storageService from './services/storage'
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { notifChange } from './reducers/notifReducer'
 import { initializeBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setUser, clearUser } from './reducers/userReducer'
+import { useParams, Route, Routes, Link } from 'react-router-dom'
 
 import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
@@ -98,32 +99,137 @@ const App = () => {
     )
   }
 
-  const byLikes = (b1, b2) => b2.likes - b1.likes
+  const SoloBlog = () => {
+    const { id } = useParams()
+    const blog = blogs.find(n => n.id === id)
+    const canRemove = user && blog.user.username === user.username
+    return (
+      <div>
+        <h2>blogs</h2>
+        <Notification />
+        <div>
+          <h2>{blog.title}</h2>
+          <a href={blog.url}>{blog.url}</a>
+          <div>{blog.likes} likes<button onClick={() => handleLike(blog)}>like</button></div>
+          <div>added by {blog.user.name}</div>
+          {canRemove && <button onClick={() => handleRemove(blog)}>delete</button>}
+        </div>
+      </div>
+    )
+  }
+
+
+  const Home = () => {
+    const byLikes = (b1, b2) => b2.likes - b1.likes
+
+    const style = {
+      marginBottom: 2,
+      padding: 5,
+      borderStyle: 'solid',
+    }
+
+    const padding = {
+      padding: 5
+    }
+
+    return (
+      <div>
+        <h2>blogs</h2>
+        <Notification />
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <NewBlog style = {padding} createBlog={handleCreateBlog} />
+        </Togglable>
+        <div>
+          {blogs.sort(byLikes).map((blog) => (
+            <div key={blog.id} style={style} className="blog">
+              <Link style={padding} to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+  const Users = () => {
+
+    const userBlogCounts = blogs.reduce((countMap, blog) => {
+      const userName = blog.user.name
+      countMap[userName] = (countMap[userName] || 0) + 1
+      return countMap
+    }, {})
+
+    return (
+      <div>
+        <h2>blogs</h2>
+        <Notification />
+        <h2>Users</h2>
+        <Table striped>
+          <thead>
+            <tr>
+              <th></th>
+              <th>blogs created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(userBlogCounts).map(([user, count]) => {
+              const userBlog = blogs.find((blog) => blog.user.name === user)
+              return (
+                <tr key={user}>
+                  <td>
+                    <Link to={`/users/${userBlog.user.id}`}>{user}</Link>
+                  </td>
+                  <td>{count}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
+      </div>
+    )
+  }
+
+  const User = () => {
+    const { id } = useParams()
+    const userBlogs = blogs.filter(blog => blog.user.id === id)
+    console.log(userBlogs)
+    if (userBlogs === []) {
+      return null
+    }
+    return (
+      <div>
+        <h2>blogs</h2>
+        <Notification />
+        <h2>{userBlogs[0].user.name}</h2>
+        <h3>added blogs</h3>
+        <ul>
+          {userBlogs.map(blog => (
+            <li key={blog.id}>
+              {blog.title}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+  const padding = {
+    padding: 5
+  }
 
   return (
     <div>
-      <h2>blogs</h2>
-      <Notification />
       <div>
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
         {user.name} logged in
         <button onClick={logout}>logout</button>
       </div>
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <NewBlog createBlog={handleCreateBlog} />
-      </Togglable>
-      <div>
-        {blogs.sort(byLikes).map((blog) => (
-          console.log('User:', user),
-          console.log('Blog username:', blog.user.username),
-          <Blog
-            key={blog.id}
-            blog={blog}
-            like={() => handleLike(blog)}
-            canRemove={user && blog.user.username === user.username}
-            remove={() => handleRemove(blog)}
-          />
-        ))}
-      </div>
+
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/users" element={<Users/>} />
+        <Route path="/users/:id" element={<User/>} />
+        <Route path="/blogs/:id" element={<SoloBlog/>} />
+      </Routes>
+
       <Footer/>
     </div>
   )
