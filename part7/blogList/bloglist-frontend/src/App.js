@@ -5,18 +5,20 @@ import loginService from './services/login'
 import storageService from './services/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { notifChange } from './reducers/notifReducer'
-import { initializeBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
+import { initializeBlogs, createBlog, likeBlog, removeBlog, addComment } from './reducers/blogReducer'
 import { setUser, clearUser } from './reducers/userReducer'
-import { useParams, Route, Routes, Link } from 'react-router-dom'
+import { useParams, Route, Routes, Link, useNavigate } from 'react-router-dom'
 
 import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
+import CommentForm from './components/CommentForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Footer from './components/Footer'
 
 const App = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
   const blogFormRef = useRef()
@@ -76,6 +78,15 @@ const App = () => {
     }
   }
 
+  const handleAddComment = async (blog, comment) => {
+    try {
+      await dispatch(addComment(blog, comment))
+      notifyWith(`A comment added for the blog '${blog.title}' by '${blog.author}'`)
+    } catch (e) {
+      notifyWith('error commenting blog', 'error')
+    }
+  }
+
   const handleRemove = async (blog) => {
     const ok = window.confirm(
       `Are you sure you want to remove '${blog.title}' by ${blog.author}`
@@ -83,6 +94,7 @@ const App = () => {
     if (ok) {
       try {
         await dispatch(removeBlog(blog.id))
+        navigate('/')
         notifyWith(`The blog '${blog.title}' by '${blog.author}' removed`)
       } catch (e) {
         notifyWith('failed to remove blog', 'error')
@@ -99,13 +111,20 @@ const App = () => {
     )
   }
 
+  /*
+  const blogMatch = useMatch('/blogs/:id')
+  const blog = blogMatch
+    ? blogs.find(b => b.id === Number(blogMatch.params.id))
+    : null
+  */
+
   const SoloBlog = () => {
     const { id } = useParams()
     const blog = blogs.find(n => n.id === id)
     const canRemove = user && blog.user.username === user.username
     return (
       <div>
-        <h2>blogs</h2>
+        <h2>Ross&#39;s blog app</h2>
         <Notification />
         <div>
           <h2>{blog.title}</h2>
@@ -113,6 +132,15 @@ const App = () => {
           <div>{blog.likes} likes<button onClick={() => handleLike(blog)}>like</button></div>
           <div>added by {blog.user.name}</div>
           {canRemove && <button onClick={() => handleRemove(blog)}>delete</button>}
+          <h2>comments</h2>
+          <CommentForm blog={blog} addComment={handleAddComment}/>
+          <ul>
+            {blog.comments.map(comment => (
+              <li key={comment}>
+                {comment}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     )
@@ -122,30 +150,31 @@ const App = () => {
   const Home = () => {
     const byLikes = (b1, b2) => b2.likes - b1.likes
 
-    const style = {
-      marginBottom: 2,
-      padding: 5,
-      borderStyle: 'solid',
-    }
-
     const padding = {
       padding: 5
     }
 
     return (
       <div>
-        <h2>blogs</h2>
+        <h2>Ross&#39;s blog app</h2>
         <Notification />
         <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <NewBlog style = {padding} createBlog={handleCreateBlog} />
         </Togglable>
-        <div>
-          {blogs.sort(byLikes).map((blog) => (
-            <div key={blog.id} style={style} className="blog">
-              <Link style={padding} to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
-            </div>
-          ))}
-        </div>
+        <Table striped>
+          <thead>
+            <tr>
+              <th style={{ fontSize: 24 }}>Blog list</th>
+            </tr>
+          </thead>
+          <tbody>
+            {blogs.sort(byLikes).map((blog) => (
+              <tr key={blog.id} ><td>
+                <Link style={padding} to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+              </td></tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
     )}
 
@@ -159,7 +188,7 @@ const App = () => {
 
     return (
       <div>
-        <h2>blogs</h2>
+        <h2>Ross&#39;s blog app</h2>
         <Notification />
         <h2>Users</h2>
         <Table striped>
@@ -190,16 +219,16 @@ const App = () => {
   const User = () => {
     const { id } = useParams()
     const userBlogs = blogs.filter(blog => blog.user.id === id)
-    console.log(userBlogs)
-    if (userBlogs === []) {
+
+    if (!user) {
       return null
     }
     return (
       <div>
-        <h2>blogs</h2>
-        <Notification />
-        <h2>{userBlogs[0].user.name}</h2>
-        <h3>added blogs</h3>
+        <h2>Ross&#39;s blog app</h2>
+        <Notification style={padding}/>
+        <h3>User: {userBlogs[0].user.name}</h3>
+        <h4>added blogs</h4>
         <ul>
           {userBlogs.map(blog => (
             <li key={blog.id}>
