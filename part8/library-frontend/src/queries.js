@@ -33,6 +33,16 @@ query {
 }
 `
 
+export const ALL_USERS = gql`
+query {
+  allUsers  {
+    username
+    id
+    favoriteGenre
+  }
+}
+`
+
 export const UPDATE_AUTHOR = gql`
 mutation editAuthor($name: String!, $setBornTo: Int!) {
   editAuthor(

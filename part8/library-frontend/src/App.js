@@ -6,8 +6,9 @@ import Authors from './components/Authors'
 import SetBirthYear from './components/SetBirthYear'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import Recommendations from './components/Recommendations'
 
-import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS } from './queries'
 
 const Notify = ({errorMessage}) => {
   if ( !errorMessage ) {
@@ -22,8 +23,10 @@ const Notify = ({errorMessage}) => {
 
 const App = () => {
   const [page, setPage] = useState('authors')
+  const [user, setUser] = useState('')
   const authorsResult = useQuery(ALL_AUTHORS)
   const booksResult = useQuery(ALL_BOOKS)
+  const usersResult = useQuery(ALL_USERS)
   const [token, setToken] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const client = useApolloClient()
@@ -60,17 +63,21 @@ const App = () => {
   
         <Books books={booksResult.data.allBooks} show={page === 'books'} />
   
-        <LoginForm setToken={setToken} setError={notify} setPage={setPage} show={page === 'login'}/>
+        <LoginForm setToken={setToken} setError={notify} setPage={setPage} setUser={setUser} show={page === 'login'}/>
       </div>
     )
   }
-else 
+else {
+  console.log(usersResult.data)
+  let favoriteGenre = usersResult.data.allUsers.find(u => u.username === user).favoriteGenre
+  let recommendedBooks = booksResult.data.allBooks.filter(b => b.genres.includes(favoriteGenre))
   return (
     <div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recommendations')}>recommendations</button>
         <button onClick={logout}>logout</button>
       </div>
 
@@ -82,9 +89,12 @@ else
 
       <Books books={booksResult.data.allBooks} show={page === 'books'} />
 
+      <Recommendations books={recommendedBooks} favoriteGenre = {favoriteGenre} show={page === 'recommendations'} />
+
       <NewBook setError={notify} show={page === 'add'} />
     </div>
   )
+}
 }
 
 export default App

@@ -44,6 +44,7 @@ const typeDefs = `
     authorCount: Int!
     allBooks(author: String, genre:String): [Book]!
     allAuthors: [Author]!
+    allUsers: [User]!
     me: User
   }
 
@@ -103,8 +104,12 @@ const resolvers = {
       const result = await Book.find(query).populate('author')
       return result
     },
-    allAuthors: async (root, args) => {
+    allAuthors: async () => {
       const result = await Author.find({})
+      return result
+    },
+    allUsers: async () => {
+      const result = await User.find({})
       return result
     },
     me: (root, args, context) => {
