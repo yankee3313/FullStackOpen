@@ -3,6 +3,7 @@ import { useQuery, useApolloClient } from '@apollo/client'
 
 import LoginForm from './components/LoginForm'
 import Authors from './components/Authors'
+import SetBirthYear from './components/SetBirthYear'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 
@@ -38,25 +39,32 @@ const App = () => {
     }, 10000)
   }
 
-  if (!token) {
-    return (
-      <div>
-        <Notify errorMessage={errorMessage} />
-        <h2>Login</h2>
-        <LoginForm
-          setToken={setToken}
-          setError={notify}
-        />
-      </div>
-    )
-  }
-
   const logout = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
   }
 
+  if (!token) {
+    return (
+      <div>
+        <div>
+          <button onClick={() => setPage('authors')}>authors</button>
+          <button onClick={() => setPage('books')}>books</button>
+          <button onClick={() => setPage('login')}>login</button>
+        </div>
+  
+        <Notify errorMessage={errorMessage} />
+  
+        <Authors authors={authorsResult.data.allAuthors} show={page === 'authors'} />
+  
+        <Books books={booksResult.data.allBooks} show={page === 'books'} />
+  
+        <LoginForm setToken={setToken} setError={notify} setPage={setPage} show={page === 'login'}/>
+      </div>
+    )
+  }
+else 
   return (
     <div>
       <div>
@@ -68,11 +76,13 @@ const App = () => {
 
       <Notify errorMessage={errorMessage} />
 
-      <Authors authors={authorsResult.data.allAuthors} ALL_AUTHORS={ALL_AUTHORS} show={page === 'authors'} />
+      <Authors authors={authorsResult.data.allAuthors} show={page === 'authors'} />
+
+      <SetBirthYear authors={authorsResult.data.allAuthors} show={page === 'authors'} />
 
       <Books books={booksResult.data.allBooks} show={page === 'books'} />
 
-      <NewBook ALL_AUTHORS={ALL_AUTHORS} ALL_BOOKS={ALL_BOOKS} show={page === 'add'} />
+      <NewBook setError={notify} show={page === 'add'} />
     </div>
   )
 }

@@ -1,22 +1,7 @@
 import { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 
-const CREATE_BOOK = gql`
-mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String!]) {
-  addBook(
-    title: $title,
-    author: $author,
-    published: $published,
-    genres: $genres
-  ) {
-    title
-    author
-    published
-    genres
-    id
-  }
-}
-`
+import { CREATE_BOOK, ALL_AUTHORS, ALL_BOOKS, ADD_AUTHOR } from '../queries'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -24,7 +9,31 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-  const [ createBook ] = useMutation(CREATE_BOOK, { refetchQueries: [ { query: props.ALL_AUTHORS}, { query: props.ALL_BOOKS } ] })
+  const authorsResult = useQuery(ALL_AUTHORS)
+  const [ addAuthor ] = useMutation(ADD_AUTHOR, { 
+    onError: (error) => {
+      console.log(error)
+      props.setError('ERROR ADDING AUTHOR')
+    },
+    update: (cache, response) => {
+      cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+
+        return {
+          allAuthors: allAuthors.concat(response.data.addAuthor)
+        }
+      })
+    }})
+  const [ createBook ] = useMutation(CREATE_BOOK, { 
+    onError: (error) => {
+      props.setError('ERROR CREATING BOOK ENTRY')
+    },
+    update: (cache, response) => {    
+      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(response.data.addBook),
+        }
+      })
+    }})
 
   if (!props.show) {
     return null
@@ -32,10 +41,14 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
+    const authors = authorsResult.data.allAuthors
+    const existingAuthor = authors.find(a => a.name === author)
 
-    console.log('add book...')
+    if(!existingAuthor){
+    await addAuthor({ variables: {name: author}})
+  }
 
-    createBook({  variables: { title, author, published: parseInt(published), genres } })
+    await createBook({  variables: { title, author, published: parseInt(published), genres } })
 
     setTitle('')
     setPublished('')

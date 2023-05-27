@@ -70,6 +70,10 @@ const typeDefs = `
         setBornTo: Int!
       ): Author
 
+    addAuthor(
+      name: String!
+    ): Author
+
     createUser(
       username: String!
       favoriteGenre: String!
@@ -124,27 +128,21 @@ const resolvers = {
         })
       }
 
-      const author = await Author.findOne({ name: args.author })
-
-      if (!author) {
-        throw new GraphQLError(`Author '${args.author}' not found`, {
-          extensions: {code: 'FORBIDDEN'}
-        })
-      }
+      const newAuthor = await Author.findOne({ name: args.author })
 
       if (args.title.length < 5) {
         throw new GraphQLError('Book title must be at least 5 characters long', {
           extensions: {code: 'FORBIDDEN'}
         })
       }
-      const book = new Book({...args, author: author.id})
+      const book = new Book({...args, author: newAuthor.id})
       try {
       await book.save()
       const savedBook = await book.populate('author')
       return savedBook
       }
       catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
     },
 
@@ -166,6 +164,13 @@ const resolvers = {
       await author.save()
       return author
   },
+
+  addAuthor: async (root, args) => {
+    const author = new Author({ name: args.name })
+    await author.save()
+      return author
+  },
+
   createUser: async (root, args) => {
     const user = new User({ username: args.username })
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '../queries'
 
-const LoginForm = ({ setError, setToken }) => {
+const LoginForm = ({ setError, setToken, setPage, show }) => {
   const [username, setUsername] = useState('rosscomer')
   const [password, setPassword] = useState('secret')
 
@@ -16,13 +16,17 @@ const LoginForm = ({ setError, setToken }) => {
     if ( result.data ) {
       const token = result.data.login.value
       setToken(token)
-      localStorage.setItem('phonenumbers-user-token', token)
+      localStorage.setItem('books-user-token', token)
     }
   }, [result.data]) // eslint-disable-line
 
+  if (!show) {
+    return null
+  }
+
   const submit = async (event) => {
     event.preventDefault()
-
+    setPage('authors')
     login({ variables: { username, password } })
   }
 
