@@ -1,10 +1,16 @@
-const Books = (props) => {
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
+
+const Recommendations = (props) => {
+  const favoriteBooks = useQuery(ALL_BOOKS, {
+    variables: { genre: props.favoriteGenre }
+  })
+
+  let books = favoriteBooks?.data?.allBooks
 
   if (!props.show) {
     return null
   }
-
-  const books = props.books  
 
   return (
     <div>
@@ -31,4 +37,4 @@ const Books = (props) => {
   )
 }
 
-export default Books
+export default Recommendations

@@ -61,16 +61,15 @@ const App = () => {
   
         <Authors authors={authorsResult.data.allAuthors} show={page === 'authors'} />
   
-        <Books books={booksResult.data.allBooks} show={page === 'books'} />
+        <Books show={page === 'books'} />
   
         <LoginForm setToken={setToken} setError={notify} setPage={setPage} setUser={setUser} show={page === 'login'}/>
       </div>
     )
   }
 else {
-  console.log(usersResult.data)
   let favoriteGenre = usersResult.data.allUsers.find(u => u.username === user).favoriteGenre
-  let recommendedBooks = booksResult.data.allBooks.filter(b => b.genres.includes(favoriteGenre))
+  
   return (
     <div>
       <div>
@@ -87,9 +86,9 @@ else {
 
       <SetBirthYear authors={authorsResult.data.allAuthors} show={page === 'authors'} />
 
-      <Books books={booksResult.data.allBooks} show={page === 'books'} />
+      <Books show={page === 'books'} />
 
-      <Recommendations books={recommendedBooks} favoriteGenre = {favoriteGenre} show={page === 'recommendations'} />
+      <Recommendations favoriteGenre={favoriteGenre} show={page === 'recommendations'} />
 
       <NewBook setError={notify} show={page === 'add'} />
     </div>

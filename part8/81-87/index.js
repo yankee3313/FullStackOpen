@@ -91,15 +91,14 @@ const resolvers = {
   Query: {
     authorCount: async () => Author.countDocuments(),
     allBooks: async (root, args) => {
+      const author = await Author.findOne({ name: args.author })
       let query = {}
       if (args.author && args.genre) {
-        const author = await Author.findOne({ name: args.author })
-        query = { author: author, genres: args.genre }
+        query = { author: author, genres: { $in: args.genre } }
       } else if (args.author) {
-        const author = await Author.findOne({ name: args.author })
         query = { author: author }
       } else if (args.genre) {
-        query = { genres: args.genre }
+        query = { genres: { $in: args.genre } }
       }
       const result = await Book.find(query).populate('author')
       return result
@@ -114,7 +113,13 @@ const resolvers = {
     },
     me: (root, args, context) => {
       return context.currentUser
+    },
+    /*
+    booksByGenre: (parent, args, context, info) => {
+      const { genre } = args
+      return context.db.Books.find((b) => b.genres.includes(genre))
     }
+    */
   },
   Author: {
     bookCount: async (root) => {
