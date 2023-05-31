@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useMutation, useSubscription } from '@apollo/client'
 
 import LoginForm from './components/LoginForm'
 import Authors from './components/Authors'
@@ -8,7 +8,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Recommendations from './components/Recommendations'
 
-import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED } from './queries'
 
 const Notify = ({errorMessage}) => {
   if ( !errorMessage ) {
@@ -21,6 +21,22 @@ const Notify = ({errorMessage}) => {
   )
 }
 
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.name
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(addedBook)),
+    }
+  })
+}
+
 const App = () => {
   const [page, setPage] = useState('authors')
   const [user, setUser] = useState('')
@@ -30,6 +46,20 @@ const App = () => {
   const [token, setToken] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded
+      notify(`${addedBook.title} added`)
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook),
+        }
+      })
+    }
+  })
 
   if (authorsResult.loading || booksResult.loading) {
     return <div>loading...</div>;
@@ -69,7 +99,7 @@ const App = () => {
   }
 else {
   let favoriteGenre = usersResult.data.allUsers.find(u => u.username === user).favoriteGenre
-  
+
   return (
     <div>
       <div>
