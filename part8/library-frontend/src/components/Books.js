@@ -3,14 +3,16 @@ import { useQuery } from '@apollo/client'
 
 const Books = (props) => {
   const filterBooks = useQuery(ALL_BOOKS)
+  const allBooks = useQuery(ALL_BOOKS)
 
   if (!props.show) {
     return null
   }
 
   const books = filterBooks.data.allBooks
+  const booklist = allBooks.data.allBooks
 
-  const genres = books.reduce((acc, book) => {
+  const genres = booklist.reduce((acc, book) => {
     book.genres.forEach(genre => {
       if (!acc.includes(genre)) {
         acc.push(genre)

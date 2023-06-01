@@ -20,7 +20,6 @@ const SetBirthYear = (props) => {
 
     setBorn('')
     setName(null)
-
   }
 
   return (

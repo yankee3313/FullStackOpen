@@ -1,5 +1,6 @@
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
+const bookCountLoader = require('./loaders')
 
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
@@ -36,9 +37,8 @@ const resolvers = {
       },
     },
     Author: {
-      bookCount: async (root) => {
-        const count = await Book.countDocuments({ author: root._id });
-        return count;
+      bookCount: (author, args,) => {
+        return bookCountLoader.load([author._id.toString()])
       },
     },
     Mutation: {
@@ -63,7 +63,7 @@ const resolvers = {
         const book = new Book({...args, author: newAuthor.id})
         try {
         const savedBook = await book.save()
-        await savedBook.populate('author')
+        await savedBook.populate('author').execPopulate()
 
         pubsub.publish('BOOK_ADDED', { bookAdded: savedBook })
 

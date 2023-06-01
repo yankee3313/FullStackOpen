@@ -8,7 +8,6 @@ const { useServer } = require('graphql-ws/lib/use/ws')
 
 const http = require('http')
 const express = require('express')
-const bodyParser = require('body-parser')
 const cors = require('cors')
 
 const jwt = require('jsonwebtoken')
@@ -53,15 +52,17 @@ const start = async () => {
         async serverWillStart() {
           return {
             async drainServer() {
-              await serverCleanup.dispose();
+              await serverCleanup.dispose()
             },
-          };
+          }
         },
       },
-    ],
+    ]
   })
 
   await server.start()
+
+  const userCache = new Map()
 
   app.use(
     '/',
@@ -72,13 +73,17 @@ const start = async () => {
         const auth = req ? req.headers.authorization : null
         if (auth && auth.startsWith('Bearer ')) {
           const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
+          if (userCache.has(decodedToken.id)) {
+            return { currentUser: userCache.get(decodedToken.id) }
+          }
           const currentUser = await User.findById(decodedToken.id).populate(
             'favoriteGenre'
           )
-          return { currentUser }
+          userCache.set(decodedToken.id, currentUser)
         }
       },
     }),
+  
   )
 
   const PORT = 4000

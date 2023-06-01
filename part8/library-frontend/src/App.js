@@ -116,7 +116,7 @@ else {
 
       <SetBirthYear authors={authorsResult.data.allAuthors} show={page === 'authors'} />
 
-      <Books show={page === 'books'} />
+      <Books booksResult={booksResult.data.allBooks} show={page === 'books'} />
 
       <Recommendations favoriteGenre={favoriteGenre} show={page === 'recommendations'} />
 
