@@ -63,7 +63,7 @@ const resolvers = {
         const book = new Book({...args, author: newAuthor.id})
         try {
         const savedBook = await book.save()
-        await savedBook.populate('author').execPopulate()
+        await savedBook.populate('author')
 
         pubsub.publish('BOOK_ADDED', { bookAdded: savedBook })
 

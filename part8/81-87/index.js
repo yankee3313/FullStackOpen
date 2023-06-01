@@ -62,8 +62,6 @@ const start = async () => {
 
   await server.start()
 
-  const userCache = new Map()
-
   app.use(
     '/',
     cors(),
@@ -73,13 +71,10 @@ const start = async () => {
         const auth = req ? req.headers.authorization : null
         if (auth && auth.startsWith('Bearer ')) {
           const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-          if (userCache.has(decodedToken.id)) {
-            return { currentUser: userCache.get(decodedToken.id) }
-          }
           const currentUser = await User.findById(decodedToken.id).populate(
             'favoriteGenre'
           )
-          userCache.set(decodedToken.id, currentUser)
+          return { currentUser }
         }
       },
     }),
