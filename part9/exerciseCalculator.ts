@@ -8,7 +8,7 @@ interface WorkoutStats {
   average: number
 }
 
-const calculator = (args: number[], target: number): WorkoutStats => {
+const calculator = (target: number, args: number[]): WorkoutStats => {
   const periodLength: number = args.length;
   const trainingDays: number = args.reduce((acc, curr) => {
     if (curr > 0){
@@ -47,4 +47,17 @@ const calculator = (args: number[], target: number): WorkoutStats => {
   };
 }
 
-console.log(calculator([3, 0, 2, 4.5, 0, 3, 1], 2))
+const target: number = Number(process.argv[2]);
+const args: number[] = process.argv.slice(3).map(Number);
+
+const result: WorkoutStats = calculator(target, args)
+
+try {
+    console.log(result)
+} catch (error: unknown) {
+    let errorMessage = 'Something went wrong: '
+    if (error instanceof Error) {
+      errorMessage += error.message;
+    }
+    console.log(errorMessage);
+  }
