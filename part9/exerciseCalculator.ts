@@ -35,6 +35,8 @@ const calculator = (target: number, args: number[]): WorkoutStats => {
     ratingDescription = 'nice try but you can do better';
   } else if (rating === 1) {
     ratingDescription = ' you ned to hit the gym more, Tubby';
+  } else {
+    ratingDescription = 'Unknown rating';
   }
   return {
     periodLength,

@@ -3,7 +3,6 @@ const bmiCalculator = (a: number, b: number): string => {
     let height = b/100;
 
     let result = (mass / (height ** 2));
-    let message = '';
 
     if (result < 25){
         return 'Normal (healthy weight)';
@@ -11,15 +10,16 @@ const bmiCalculator = (a: number, b: number): string => {
         return 'Overweight';
     } else if (result >= 30) {
         return 'Obese';
-    }   
+    } else {
+        throw new Error('Unexpected BMI calculation');
+      }
   }
   
 const a: number = Number(process.argv[2]);
 const b: number = Number(process.argv[3]);
 
-const bmiResult: string = bmiCalculator(a, b);
-
 try {
+    const bmiResult: string = bmiCalculator(a, b);
     console.log(bmiResult);
 } catch (error: unknown) {
     let errorMessage = 'Something went wrong: '
