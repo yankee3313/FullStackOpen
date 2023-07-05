@@ -47,17 +47,17 @@ const calculator = (target: number, args: number[]): WorkoutStats => {
     target,
     average,
   };
-}
+};
 
-const target: number = Number(process.argv[2]);
+const target = Number(process.argv[2]);
 const args: number[] = process.argv.slice(3).map(Number);
 
-const result: WorkoutStats = calculator(target, args)
+const result: WorkoutStats = calculator(target, args);
 
 try {
-    console.log(result)
+    console.log(result);
 } catch (error: unknown) {
-    let errorMessage = 'Something went wrong: '
+    let errorMessage = 'Something went wrong: ';
     if (error instanceof Error) {
       errorMessage += error.message;
     }

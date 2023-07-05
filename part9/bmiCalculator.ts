@@ -1,6 +1,6 @@
 const bmiCalculator = (weight: number, height: number): string => {
 
-    let bmi = (weight / ((height/100) ** 2));
+    const bmi = (weight / ((height/100) ** 2));
 
     if (bmi < 25){
         return 'Normal (healthy weight)';
@@ -11,6 +11,6 @@ const bmiCalculator = (weight: number, height: number): string => {
     } else {
         throw new Error('Unexpected BMI calculation');
       }
-  }
+  };
 
   export default bmiCalculator;
