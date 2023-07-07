@@ -8,7 +8,7 @@ interface WorkoutStats {
   average: number
 }
 
-const calculator = (target: number, args: number[]): WorkoutStats => {
+export const calculator = (target: number, args: number[]): WorkoutStats => {
   const periodLength: number = args.length;
   const trainingDays: number = args.reduce((acc, curr) => {
     if (curr > 0){
