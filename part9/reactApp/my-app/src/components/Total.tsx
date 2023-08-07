@@ -1,8 +1,4 @@
-import React from 'react';
-
-interface CoursePart {
-  exerciseCount: number;
-}
+import { CoursePart } from './Types'
 
 interface TotalProps {
   courseParts: CoursePart[];
