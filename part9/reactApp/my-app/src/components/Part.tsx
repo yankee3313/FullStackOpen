@@ -29,7 +29,7 @@ return (
             return (
             <div key={index} style={{ lineHeight: '.1', paddingBottom: '2px' }}>
                 <p ><em>{part.description}</em></p>
-                <p>Background Material: {part.backgroundMaterial}</p>
+                <p>Background Material: <a href={part.backgroundMaterial}>{part.backgroundMaterial}</a></p>
             </div>
             );
         default:
