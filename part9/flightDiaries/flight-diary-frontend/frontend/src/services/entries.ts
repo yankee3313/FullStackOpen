@@ -5,7 +5,7 @@ import { apiBaseUrl } from "../utils";
 
 const getAll = async () => {
   const { data } = await axios.get<DiaryEntry[]>(
-    `${apiBaseUrl}/diaryentries`
+    `${apiBaseUrl}/diaries`
   );
 
   return data;
@@ -13,7 +13,7 @@ const getAll = async () => {
 
 const create = async (object: DiaryFormValues) => {
   const { data } = await axios.post<DiaryEntry>(
-    `${apiBaseUrl}/diaryentries`,
+    `${apiBaseUrl}/diaries`,
     object
   );
 
