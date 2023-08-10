@@ -1,6 +1,6 @@
 import React, { useState, SyntheticEvent } from 'react';
 import diaryService from '../services/entries';
-import { DiaryEntry, DiaryFormValues } from '../types';
+import { DiaryEntry, DiaryFormValues, Visibility, Weather } from '../types';
 
 interface Props {
   setDiaries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
@@ -9,9 +9,17 @@ interface Props {
 
 const NewDiaryEntryForm = ({ setDiaries, diaries }: Props) => {
     const [date, setDate] = useState('');
-    const [visibility, setVisibility] = useState('');
-    const [weather, setWeather] = useState('');
+    const [visibility, setVisibility] = useState<Visibility>('great');
+    const [weather, setWeather] = useState<Weather>('sunny');
     const [comment, setComment] = useState('');
+
+    const handleVisibilityChange = (value: string) => {
+        setVisibility(value as Visibility);
+      };
+    
+    const handleWeatherChange = (value: string) => {
+    setWeather(value as Weather);
+    };
 
     const addDiaryEntry = async (event: SyntheticEvent) => {
         event.preventDefault();
@@ -30,8 +38,8 @@ const NewDiaryEntryForm = ({ setDiaries, diaries }: Props) => {
           setDiaries([...diaries, newEntry]);
     
           setDate('');
-          setVisibility('');
-          setWeather('');
+          setVisibility('great');
+          setWeather('sunny');
           setComment('');
         } catch (error) {
           console.error('Error creating new diary entry:', error);
@@ -40,7 +48,7 @@ const NewDiaryEntryForm = ({ setDiaries, diaries }: Props) => {
 
   return (
     <form onSubmit={addDiaryEntry}>
-      <label>
+      <label style={{display: 'block'}}>
         Date:
         <input
           type="text"
@@ -49,25 +57,25 @@ const NewDiaryEntryForm = ({ setDiaries, diaries }: Props) => {
           onChange={({ target }) => setDate(target.value)}
         />
       </label>
-      <label>
+      <label style={{display: 'block'}}>
         Weather:
         <input
           type="text"
           name="weather"
           value={weather}
-          onChange={({ target }) => setWeather(target.value)}
+          onChange={({ target }) => handleWeatherChange(target.value)}
         />
       </label>
-      <label>
+      <label style={{display: 'block'}}>
         Visibility:
         <input
           type="text"
           name="visibility"
           value={visibility}
-          onChange={({ target }) => setVisibility(target.value)}
+          onChange={({ target }) => handleVisibilityChange(target.value)}
         />
       </label>
-      <label>
+      <label style={{display: 'block'}}>
         Comment:
         <input
           name="comment"
