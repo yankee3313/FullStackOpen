@@ -10,7 +10,8 @@ interface Props {
   }
 
 const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
-    const [date, setDate] = useState('');
+    const defaultDate = new Date().toISOString().substring(0,10);
+    const [date, setDate] = useState<string>('');
     const [visibility, setVisibility] = useState<Visibility>('great');
     const [weather, setWeather] = useState<Weather>('sunny');
     const [comment, setComment] = useState('');
@@ -57,7 +58,7 @@ const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
       <label style={{display: 'block'}}>
         Date:
         <input
-          type="text"
+          type="date"
           name="date"
           value={date}
           onChange={({ target }) => setDate(target.value)}
