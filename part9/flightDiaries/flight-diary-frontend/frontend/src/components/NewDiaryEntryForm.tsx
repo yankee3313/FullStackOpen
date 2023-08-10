@@ -10,7 +10,6 @@ interface Props {
   }
 
 const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
-    const defaultDate = new Date().toISOString().substring(0,10);
     const [date, setDate] = useState<string>('');
     const [visibility, setVisibility] = useState<Visibility>('great');
     const [weather, setWeather] = useState<Weather>('sunny');
