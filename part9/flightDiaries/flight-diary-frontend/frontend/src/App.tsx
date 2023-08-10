@@ -6,10 +6,12 @@ import { DiaryEntry } from "./types";
 
 import diaryService from "./services/entries";
 import NewDiaryEntryForm from "./components/NewDiaryEntryForm"
-
+import DiaryList from "./components/DiaryList"
+import ErrorMessage from "./components/ErrorMessage"
 
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -23,18 +25,12 @@ const App = () => {
 
   return (
     <div className='App'>
+      <h1>Add New Diary Entry</h1>
+      <ErrorMessage errorMessage={errorMessage}/>
+      <NewDiaryEntryForm setDiaries={setDiaries} diaries={diaries}
+        setErrorMessage={setErrorMessage}/>
       <h1>Diary Entries</h1>
-      <NewDiaryEntryForm setDiaries={setDiaries} diaries={diaries}/>
-      <ul>
-      {diaries.map((entry: DiaryEntry) => (
-        <li key={entry.id}>
-          <h2>{entry.date}</h2>
-          <p>Weather: {entry.weather}</p>
-          <p>Visibility: {entry.visibility}</p>
-          <p>Comment: {entry.comment}</p>
-        </li>
-      ))}
-      </ul>
+      <DiaryList diaries={diaries}/>
     </div>
   );
 };

@@ -1,24 +1,31 @@
 import React, { useState, SyntheticEvent } from 'react';
 import diaryService from '../services/entries';
 import { DiaryEntry, DiaryFormValues, Visibility, Weather } from '../types';
+import axios from 'axios';
 
 interface Props {
   setDiaries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
   diaries: DiaryEntry[];
+  setErrorMessage:React.Dispatch<React.SetStateAction<string>>;
   }
 
-const NewDiaryEntryForm = ({ setDiaries, diaries }: Props) => {
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>
+}
+
+const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
     const [date, setDate] = useState('');
     const [visibility, setVisibility] = useState<Visibility>('great');
     const [weather, setWeather] = useState<Weather>('sunny');
     const [comment, setComment] = useState('');
 
     const handleVisibilityChange = (value: string) => {
-        setVisibility(value as Visibility);
-      };
+      setVisibility(value as Visibility);
+    };
     
     const handleWeatherChange = (value: string) => {
-    setWeather(value as Weather);
+      setWeather(value as Weather);
     };
 
     const addDiaryEntry = async (event: SyntheticEvent) => {
@@ -42,9 +49,24 @@ const NewDiaryEntryForm = ({ setDiaries, diaries }: Props) => {
           setWeather('sunny');
           setComment('');
         } catch (error) {
-          console.error('Error creating new diary entry:', error);
-        }
-      };
+            if (axios.isAxiosError<ValidationError, Record<string, unknown>>(error)) {
+                if (error.response?.status === 400 && error.response.data?.errors?.visibility){
+                    const errorMessage = `Invalid Visibility: ${visibility}`;
+                    setErrorMessage(errorMessage)
+                } else if (error.response?.status === 400 && error.response.data?.errors?.weather){
+                    const errorMessage = `Invalid Weather: ${weather}`;
+                    setErrorMessage(errorMessage)
+                } else if (error.response?.status === 400 && error.response.data?.errors?.date){
+                    const errorMessage = `Invalid Date: ${date}`;
+                    setErrorMessage(errorMessage)
+                }
+              console.log(error.status)
+              console.error(error.response);
+            } else {
+              console.error(error);
+            }
+          }
+    };
 
   return (
     <form onSubmit={addDiaryEntry}>
