@@ -9,11 +9,6 @@ interface Props {
   setErrorMessage:React.Dispatch<React.SetStateAction<string>>;
   }
 
-interface ValidationError {
-  message: string;
-  errors: Record<string, string[]>
-}
-
 const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
     const [date, setDate] = useState('');
     const [visibility, setVisibility] = useState<Visibility>('great');
@@ -49,21 +44,10 @@ const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
           setWeather('sunny');
           setComment('');
         } catch (error) {
-            if (axios.isAxiosError<ValidationError, Record<string, unknown>>(error)) {
-                if (error.response?.status === 400 && error.response.data?.errors?.visibility){
-                    const errorMessage = `Invalid Visibility: ${visibility}`;
-                    setErrorMessage(errorMessage)
-                } else if (error.response?.status === 400 && error.response.data?.errors?.weather){
-                    const errorMessage = `Invalid Weather: ${weather}`;
-                    setErrorMessage(errorMessage)
-                } else if (error.response?.status === 400 && error.response.data?.errors?.date){
-                    const errorMessage = `Invalid Date: ${date}`;
-                    setErrorMessage(errorMessage)
-                }
-              console.log(error.status)
-              console.error(error.response);
+            if (axios.isAxiosError(error)) {
+              setErrorMessage(error.response?.data)
             } else {
-              console.error(error);
+              console.log(error);
             }
           }
     };
@@ -82,20 +66,71 @@ const NewDiaryEntryForm = ({ setDiaries, diaries, setErrorMessage }: Props) => {
       <label style={{display: 'block'}}>
         Weather:
         <input
-          type="text"
+          type="radio"
           name="weather"
-          value={weather}
-          onChange={({ target }) => handleWeatherChange(target.value)}
-        />
+          value="sunny"
+          checked={weather === 'sunny'}
+          onChange={() => handleWeatherChange('sunny')}
+        /> Sunny
+        <input
+          type="radio"
+          name="weather"
+          value="cloudy"
+          checked={weather === 'cloudy'}
+          onChange={() => handleWeatherChange('cloudy')}
+        /> Cloudy
+        <input
+          type="radio"
+          name="weather"
+          value="windy"
+          checked={weather === 'windy'}
+          onChange={() => handleWeatherChange('windy')}
+        /> Windy
+        <input
+          type="radio"
+          name="weather"
+          value="rainy"
+          checked={weather === 'rainy'}
+          onChange={() => handleWeatherChange('rainy')}
+        /> Rainy
+        <input
+          type="radio"
+          name="weather"
+          value="stormy"
+          checked={weather === 'stormy'}
+          onChange={() => handleWeatherChange('stormy')}
+        /> Stormy
       </label>
       <label style={{display: 'block'}}>
         Visibility:
         <input
-          type="text"
+          type="radio"
           name="visibility"
-          value={visibility}
-          onChange={({ target }) => handleVisibilityChange(target.value)}
-        />
+          value="great"
+          checked={visibility === 'great'}
+          onChange={() => handleVisibilityChange('great')}
+        /> Great
+        <input
+          type="radio"
+          name="visibility"
+          value="good"
+          checked={visibility === 'good'}
+          onChange={() => handleVisibilityChange('good')}
+        /> Good
+        <input
+          type="radio"
+          name="visibility"
+          value="ok"
+          checked={visibility === 'ok'}
+          onChange={() => handleVisibilityChange('ok')}
+        /> Okay
+        <input
+          type="radio"
+          name="visibility"
+          value="poor"
+          checked={visibility === 'poor'}
+          onChange={() => handleVisibilityChange('poor')}
+        /> Poor
       </label>
       <label style={{display: 'block'}}>
         Comment:
