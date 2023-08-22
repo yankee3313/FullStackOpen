@@ -9,14 +9,13 @@ const utils_1 = __importDefault(require("../utils"));
 const diagnosisService_1 = require("../services/diagnosisService");
 const router = express_1.default.Router();
 router.get('/', (_req, res) => {
-    res.send((0, patientService_1.getNonSensitivePatients)());
+    res.send((0, patientService_1.getPatients)());
 });
 router.get('/:id', (req, res) => {
     const patient = (0, patientService_1.findById)(req.params.id);
     if (patient) {
         const entries = (0, diagnosisService_1.getEntries)(patient.id);
         const patientWithEntries = Object.assign(Object.assign({}, patient), { entries: entries });
-        console.log(patientWithEntries);
         res.send(patientWithEntries);
     }
     else {
