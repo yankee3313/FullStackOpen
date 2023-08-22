@@ -18,6 +18,8 @@ app.get('/api/ping', (_req: any, res: { send: (arg0: string) => void; }) => {
 
 app.use('/api/patients', patientsRouter);
 
+app.use('/api/patients/:id', patientsRouter);
+
 app.use('/api/diagnoses', diagnosesRouter);
 
 app.listen(PORT, () => {

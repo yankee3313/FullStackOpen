@@ -1,6 +1,8 @@
 import express from 'express';
 import { addPatient, getNonSensitivePatients, findById } from "../services/patientService"
 import toNewPatientEntry from '../utils';
+import { getEntries } from "../services/diagnosisService"
+
 
 const router = express.Router();
 
@@ -12,7 +14,15 @@ router.get('/:id', (req, res) => {
   const patient = findById(req.params.id);
 
   if (patient) {
-    res.send(patient);
+    const entries = getEntries(patient.id);
+
+    const patientWithEntries = {
+      ...patient,
+      entries: entries
+    };
+
+    res.send(patientWithEntries);
+
   } else {
     res.sendStatus(404);
   }
