@@ -1,5 +1,5 @@
 import express from 'express';
-import { addPatient, getNonSensitivePatients, getPatients, findById } from "../services/patientService"
+import { addPatient, getPatients, findById } from "../services/patientService"
 import toNewPatientEntry from '../utils';
 import { Patient } from '../types';
 

@@ -6,7 +6,7 @@ export interface Diagnosis {
   };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Entry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
@@ -20,7 +20,7 @@ export interface SickLeave {
   endDate: string;
 };
 
-export interface OccupationalHealthcareEntry extends Entry {
+export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
   sickLeave: SickLeave;
@@ -31,7 +31,7 @@ export interface Discharge {
   criteria: string;
 };
 
-export interface HospitalEntry extends Entry {
+export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: Discharge;
 };
@@ -43,7 +43,7 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3
 };
 
-export interface HealthCheckEntry extends Entry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 };
@@ -55,7 +55,7 @@ export interface Patient {
   gender: string;
   ssn?: string;
   dateOfBirth?: string;
-  entries?: Entry[]
+  entries?: Array<BaseEntry | HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry>;
 };
 
 export enum Gender {
