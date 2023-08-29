@@ -1,15 +1,7 @@
 import diagnosisData from '../../data/diagnoses';
-import { Diagnosis, Entry } from '../types';
+import { Diagnosis } from '../types';
 
-export const getEntries = (patientId: string): Entry[] => {
-  const allDiagnoses: Diagnosis[] = diagnosisData;
-
-  const entriesForPatient = allDiagnoses.filter(diagnosis => diagnosis.patientId === patientId);
-  
-  return entriesForPatient;
-};
-
-export const getDiagnosises = (): Diagnosis[] => {
+export const getDiagnoses = (): Diagnosis[] => {
   return diagnosisData;
 };
 

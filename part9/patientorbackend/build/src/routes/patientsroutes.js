@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const patientService_1 = require("../services/patientService");
 const utils_1 = __importDefault(require("../utils"));
-const diagnosisService_1 = require("../services/diagnosisService");
 const router = express_1.default.Router();
 router.get('/', (_req, res) => {
     res.send((0, patientService_1.getPatients)());
@@ -14,8 +13,7 @@ router.get('/', (_req, res) => {
 router.get('/:id', (req, res) => {
     const patient = (0, patientService_1.findById)(req.params.id);
     if (patient) {
-        const entries = (0, diagnosisService_1.getEntries)(patient.id);
-        const patientWithEntries = Object.assign(Object.assign({}, patient), { entries: entries });
+        const patientWithEntries = Object.assign(Object.assign({}, patient), { entries: patient.entries || [] });
         res.send(patientWithEntries);
     }
     else {
