@@ -1,13 +1,14 @@
-import { Patient, Gender, BaseEntry } from "../../types";
+import { Patient, Gender, BaseEntry, Diagnosis } from "../../types";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import { useParams } from 'react-router-dom';
 
 interface Props {
     patients : Patient[]
+    diagnoses: Diagnosis[]
   }
 
-const SoloPatientPage = ({ patients } : Props ) => {
+const SoloPatientPage = ({ patients, diagnoses } : Props ) => {
   const { id } = useParams<{ id: string }>();
 
   const patient = patients.find(p => p.id === id);
@@ -29,10 +30,16 @@ const SoloPatientPage = ({ patients } : Props ) => {
                         <p><i>{entry.description}</i></p>
                         {entry.diagnosisCodes ? (
                             <ul>
-                                {entry.diagnosisCodes.map((code: string, index: number) => (
-                                    <li key={index}>{code}</li>
-                                ))}
-                            </ul>
+                            {entry.diagnosisCodes.map((code: string, index: number) => {
+                                const diagnosis = diagnoses.find(d => d.code === code);
+                                return (
+                                    <li key={index}>
+                                        {code} - {diagnosis ? diagnosis.name : "Diagnosis not found"}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+
                         ) : (
                             <p></p>
                         )}
