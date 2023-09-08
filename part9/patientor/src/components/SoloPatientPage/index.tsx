@@ -49,20 +49,6 @@ const EntryDetails: React.FC<{ entry: BaseEntry; diagnoses: Diagnosis[] }> = ({ 
         const occupationalEntry = entry as OccupationalHealthcareEntry;
           return (
               <div>
-                {entry.diagnosisCodes ? (
-                  <ul>
-                    {entry.diagnosisCodes.map((code: string, index: number) => {
-                        const diagnosis = diagnoses.find(d => d.code === code);
-                        return (
-                            <li key={index}>
-                                {code} - {diagnosis ? diagnosis.name : "Diagnosis not found"}
-                            </li>
-                        );
-                    })}
-                  </ul>
-                    ) : (
-                        <p></p>
-                    )}
                 <p>Employer: {occupationalEntry.employerName}</p>
                   {occupationalEntry.sickLeave && (
                     <div>
@@ -96,6 +82,20 @@ const SoloPatientPage = ({ patients, diagnoses } : Props ) => {
                 patient.entries.map((entry: BaseEntry, index: number) => (
                     <div key={index} style={{border: '1px solid black', margin: '5px'}}>
                         <p><strong>{entry.date}:</strong></p>
+                        {entry.diagnosisCodes ? (
+                        <ul>
+                          {entry.diagnosisCodes.map((code: string, index: number) => {
+                              const diagnosis = diagnoses.find(d => d.code === code);
+                              return (
+                                  <li key={index}>
+                                      {code} - {diagnosis ? diagnosis.name : "Diagnosis not found"}
+                                  </li>
+                              );
+                          })}
+                        </ul>
+                          ) : (
+                              <p></p>
+                          )}
                         <p><i>{entry.description}</i></p>
                         <EntryDetails entry={entry} diagnoses={diagnoses} />
                         <p><strong>Diagnosis by {entry.specialist}</strong></p>
