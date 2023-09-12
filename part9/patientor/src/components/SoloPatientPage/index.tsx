@@ -28,7 +28,7 @@ const getHeartColor = (rating: number): JSX.Element => {
   }
 };
 
-const EntryDetails: React.FC<{ entry: BaseEntry; diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
+const EntryDetails: React.FC<{ entry: BaseEntry; diagnoses: Diagnosis[] }> = ({ entry }) => {
   switch (entry.type) {
       case "Hospital":
         const hospitalEntry = entry as HospitalEntry;
@@ -59,7 +59,7 @@ const EntryDetails: React.FC<{ entry: BaseEntry; diagnoses: Diagnosis[] }> = ({ 
               </div>
           );
       default:
-        return assertNever(entry);
+        return assertNever(entry as never);
   }
 };
 
