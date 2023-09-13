@@ -23,8 +23,10 @@ const getHeartColor = (rating: number): JSX.Element => {
         return <FavoriteIcon style={{ color: "orange" }} />;
       case 2:
         return <FavoriteIcon style={{ color: "red" }} />;
+      case 3:
+        return <FavoriteIcon style={{ color: "brown" }} />;
       default:
-        return <FavoriteIcon style={{ color: "green" }} />;
+        return <FavoriteIcon style={{ color: "black" }} />;
   }
 };
 

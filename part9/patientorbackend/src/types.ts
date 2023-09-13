@@ -12,8 +12,9 @@ export interface BaseEntry {
   date: string;
   specialist: string;
   diagnosisCodes?: Array<Diagnosis['code']>;
-  type: string;
 };
+
+export type EntryWithoutId = Omit<BaseEntry, 'id'>;
 
 export interface SickLeave {
   startDate: string;

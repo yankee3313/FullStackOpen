@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseDiagnosisCodes = exports.toNewPatientEntry = void 0;
 const types_1 = require("./types");
 const isString = (text) => {
     return typeof text === 'string' || text instanceof String;
@@ -56,4 +57,11 @@ const toNewPatientEntry = (object) => {
     }
     throw new Error('Incorrect data: a field missing');
 };
-exports.default = toNewPatientEntry;
+exports.toNewPatientEntry = toNewPatientEntry;
+const parseDiagnosisCodes = (object) => {
+    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+        return [];
+    }
+    return object.diagnosisCodes;
+};
+exports.parseDiagnosisCodes = parseDiagnosisCodes;
