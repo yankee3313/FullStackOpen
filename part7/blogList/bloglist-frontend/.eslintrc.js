@@ -17,7 +17,7 @@ module.exports = {
   plugins: ['react', 'jest', 'cypress'],
   rules: {
     indent: ['error', 2],
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': ['error', 'windows'],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     eqeqeq: 'error',
