@@ -2,7 +2,7 @@ import express from 'express';
 const app = express();
 import diaryRouter from './routes/diaries';
 app.use(express.json());
-const cors = require('cors');
+import cors from 'cors';
 
 app.use(cors());
 

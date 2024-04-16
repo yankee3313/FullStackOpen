@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const patientService_1 = require("../services/patientService");
 const utils_1 = require("../utils");
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const router = express_1.default.Router();
 router.get('/', (_req, res) => {
     res.send((0, patientService_1.getPatients)());
@@ -24,9 +25,6 @@ router.post('/:id/entries', (req, res) => {
     const patient = (0, patientService_1.findById)(req.params.id);
     if (patient && patient.entries) {
         const { date, description, specialist, type } = req.body;
-        if (!type || !['Hospital', 'HealthCheck', 'OccupationalHealthcare'].includes(type)) {
-            return res.status(400).json({ error: 'Invalid entry type' });
-        }
         const diagnosisCodes = (0, utils_1.parseDiagnosisCodes)(req.body);
         let newEntry;
         switch (type) {

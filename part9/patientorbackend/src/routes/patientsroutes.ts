@@ -1,8 +1,8 @@
 import express from 'express';
-import { addPatient, getPatients, findById } from "../services/patientService"
+import { addPatient, getPatients, findById } from "../services/patientService";
 import { toNewPatientEntry, parseDiagnosisCodes } from '../utils';
-import { Patient, BaseEntry, HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry, EntryWithoutId } from '../types';
-import { v1 as uuid } from 'uuid';
+import { Patient, HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry, EntryWithoutId } from '../types';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 const router = express.Router();
 
@@ -78,13 +78,13 @@ router.post('/:id/entries', (req, res) => {
       return res.status(400).json({ error: 'Unexpected entry type' });
   }
 
-  patient.entries.push(newEntry as any);
+  patient.entries.push(newEntry as HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry);
 
   return res.status(201).json(newEntry);
 } 
 else {
   console.log('Patient not found.');
-  res.sendStatus(404);
+  return res.sendStatus(404);
 }
 });
 
